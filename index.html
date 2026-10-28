@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAAFEM — Sistema Automatizado de Análise Fiscal e Econômica Municipal | Paloware</title>
+  <meta name="description" content="Plataforma de alta performance para análise orçamentária, responsabilidade fiscal (LRF) e conformidade com o Piso do Magistério Municipal.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Efeito de Fundo Luminoso / Mesh Cyber-Paloware -->
+  <div class="ambient-glow" aria-hidden="true">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+  </div>
+
+  <div class="app-layout" id="appRoot">
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar" id="mainSidebar" aria-label="Navegação Principal">
+      <div class="sidebar-header">
+        <div class="brand-logo" id="brandLogoBtn" role="button" tabindex="0" title="Sobre a Paloware e o SAAFEM">
+          <div class="cyber-dove-icon" aria-hidden="true">
+            <!-- Cyber-Dove SVG Vector -->
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="22" stroke="url(#paloGrad)" stroke-width="1.5" stroke-dasharray="4 2" class="palo-ring"/>
+              <path d="M14 26C14 20 20 15 28 15C33 15 37 18 37 22C37 25 33 27 29 27C25 27 23 29 21 32C19 35 15 33 14 26Z" fill="url(#paloWing)" fill-opacity="0.25" stroke="url(#paloGrad)" stroke-width="1.5"/>
+              <path d="M26 15L33 12L32 17" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="31" cy="18" r="1.5" fill="var(--paloware-rose)"/>
+              <line x1="20" y1="23" x2="27" y2="23" stroke="var(--primary)" stroke-width="1" stroke-dasharray="1 1"/>
+              <line x1="18" y1="27" x2="25" y2="27" stroke="var(--paloware-rose)" stroke-width="1"/>
+              <defs>
+                <linearGradient id="paloGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#00f0ff"/>
+                  <stop offset="0.5" stop-color="#3b82f6"/>
+                  <stop offset="1" stop-color="#f472b6"/>
+                </linearGradient>
+                <linearGradient id="paloWing" x1="14" y1="15" x2="37" y2="33" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#38bdf8"/>
+                  <stop offset="1" stop-color="#ec4899"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">SAAFEM</span>
+            <span class="brand-subtitle">por Paloware</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Wizard Progress (Primata-friendly indicator) -->
+      <div class="wizard-mini-progress" title="Trilha de Progresso do Analista">
+        <div class="wizard-label">
+          <span>ETAPA ATUAL</span>
+          <span class="wizard-badge" id="wizardCurrentLabel">1 de 6</span>
+        </div>
+        <div class="wizard-bar-track">
+          <div class="wizard-bar-fill" id="wizardMiniBar" style="width: 16%;"></div>
+        </div>
+      </div>
+
+      <!-- Sidebar Navigation Menu -->
+      <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-section-title">PAINEL PRINCIPAL</div>
+        
+        <button class="nav-item active" data-view="view-dashboard" id="nav-dashboard">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          </span>
+          <span class="nav-text">Visão Geral</span>
+          <span class="nav-pill" id="kpiAlertCount">7 alertas</span>
+        </button>
+
+        <button class="nav-item" data-view="view-municipios" id="nav-municipios">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          <span class="nav-text">Municípios</span>
+          <span class="nav-tag">PR</span>
+        </button>
+
+        <button class="nav-item" data-view="view-coleta" id="nav-coleta">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </span>
+          <span class="nav-text">Coleta de dados</span>
+          <span class="pulse-dot" title="SICONFI / TCE Conectados"></span>
+        </button>
+
+        <div class="nav-group" id="navGroupAnalises">
+          <button class="nav-item has-sub" id="nav-analises-toggle" aria-expanded="false">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </span>
+            <span class="nav-text">Análises</span>
+            <span class="nav-chevron">▾</span>
+          </button>
+          <div class="nav-submenu" id="navSubmenu">
+            <button class="nav-subitem" data-view="view-analise-geral" id="nav-analise-geral">
+              <span class="sub-bullet"></span> Composição FUNDEB
+            </button>
+            <button class="nav-subitem" data-view="view-analise-financeira" id="nav-analise-financeira">
+              <span class="sub-bullet"></span> Limites LRF & Magistério
+            </button>
+          </div>
+        </div>
+
+        <button class="nav-item" data-view="view-conferencia" id="nav-conferencia">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </span>
+          <span class="nav-text">Conferência</span>
+        </button>
+
+        <button class="nav-item" data-view="view-indicadores" id="nav-indicadores">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="8" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
+          </span>
+          <span class="nav-text">Semáforo Fiscal</span>
+          <span class="status-indicator-mini status-warn" title="Curitiba em Atenção"></span>
+        </button>
+
+        <button class="nav-item" data-view="view-simulador" id="nav-simulador">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          </span>
+          <span class="nav-text">Simulador de Piso</span>
+          <span class="nav-badge-pill">6,27%</span>
+        </button>
+
+        <button class="nav-item" data-view="view-relatorios" id="nav-relatorios">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </span>
+          <span class="nav-text">Parecer Técnico</span>
+        </button>
+
+        <button class="nav-item" data-view="view-exportacao" id="nav-exportacao">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          </span>
+          <span class="nav-text">Exportação</span>
+        </button>
+
+        <div class="nav-section-title">SISTEMA</div>
+        
+        <button class="nav-item" data-view="view-monitoramento" id="nav-monitoramento">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </span>
+          <span class="nav-text">Monitoramento & Logs</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer (Active User / Auth State & Active Context) -->
+      <div class="sidebar-footer">
+        <div class="active-badge" id="sidebarActiveContextBadge">
+          <span class="active-context-label">CONTEXTO ATIVO</span>
+          <span class="active-context-val" id="currentContextVal">VISÃO GERAL</span>
+        </div>
+        <div class="user-profile-strip" id="userProfileStrip">
+          <div class="user-avatar" id="userAvatar">AN</div>
+          <div class="user-info">
+            <span class="user-name" id="displayUserName">Analista Fiscal</span>
+            <span class="user-role">Prefeitura • Consultor</span>
+          </div>
+          <button class="btn-logout" id="btnLogout" title="Sair da conta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT WRAPPER ==================== -->
+    <div class="main-wrapper">
+      
+      <!-- Top Bar: Global Search, Quick Status, Theme Switcher, Sound & Team -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="btn-mobile-menu" id="btnToggleSidebar" aria-label="Abrir Menu">
+            <span></span><span></span><span></span>
+          </button>
+          
+          <div class="active-city-chip" id="topbarCityChip" title="Município atualmente selecionado para análise">
+            <span class="city-icon">📍</span>
+            <span class="city-name" id="topbarCityName">Curitiba • PR</span>
+            <span class="city-ibge" id="topbarCityIBGE">IBGE: 4106902</span>
+            <button class="btn-change-city" id="btnQuickChangeCity">Mudar</button>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <!-- Audio Feedback Toggle (Micro-interactions) -->
+          <button class="icon-btn" id="btnToggleAudio" title="Ativar/Desativar Efeitos Sonoros Sutis" aria-label="Som">
+            <span class="sound-icon" id="soundIcon">🔊</span>
+          </button>
+
+          <!-- Guided Tour Helper (Primata-friendly helper) -->
+          <button class="btn-assistant" id="btnHelpGuide" title="Ajuda rápida e passo a passo">
+            <span class="help-sparkle">✨</span>
+            <span class="help-text">Como Usar?</span>
+          </button>
+
+          <!-- Theme Switcher (Liquid Dark / Light Transition) -->
+          <button class="theme-toggle" id="themeToggleBtn" title="Alternar Modo Escuro / Claro" aria-label="Alternar Tema">
+            <span class="theme-icon moon">🌙</span>
+            <span class="theme-icon sun">☀️</span>
+          </button>
+
+          <!-- Paloware Team Modal Trigger -->
+          <button class="btn-paloware-pill" id="btnOpenPalowareModal" title="Equipe Paloware & Filosofia do Projeto">
+            <span class="palo-dot"></span>
+            <span>Paloware Lab</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Global Guided Stepper Bar (Primata-friendly Wizard) -->
+      <div class="wizard-stepper-bar" id="wizardStepperBar" aria-label="Trilha de Execução do Analista">
+        <div class="wizard-step" data-target-view="view-municipios" id="step-btn-1">
+          <div class="step-num">1</div>
+          <div class="step-label">
+            <span class="step-title">Município</span>
+            <span class="step-status">Selecionado</span>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="wizard-step" data-target-view="view-coleta" id="step-btn-2">
+          <div class="step-num">2</div>
+          <div class="step-label">
+            <span class="step-title">Coleta & OCR</span>
+            <span class="step-status">70% Normalizado</span>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="wizard-step" data-target-view="view-conferencia" id="step-btn-3">
+          <div class="step-num">3</div>
+          <div class="step-label">
+            <span class="step-title">Conferência</span>
+            <span class="step-status">Valores em R$</span>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="wizard-step" data-target-view="view-analise-geral" id="step-btn-4">
+          <div class="step-num">4</div>
+          <div class="step-label">
+            <span class="step-title">Análises</span>
+            <span class="step-status">FUNDEB & LRF</span>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="wizard-step" data-target-view="view-indicadores" id="step-btn-5">
+          <div class="step-num">5</div>
+          <div class="step-label">
+            <span class="step-title">Simulador</span>
+            <span class="step-status">Semáforo & Piso</span>
+          </div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="wizard-step" data-target-view="view-relatorios" id="step-btn-6">
+          <div class="step-num">6</div>
+          <div class="step-label">
+            <span class="step-title">Parecer</span>
+            <span class="step-status">PDF & Exportação</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primata-friendly Contextual Hint Banner -->
+      <div class="context-hint-card" id="contextHintCard">
+        <div class="hint-icon">💡</div>
+        <div class="hint-content">
+          <strong id="hintTitle">Dica Rápida:</strong>
+          <span id="hintMessage">Veja o panorama dos 399 municípios do Paraná e clique em 'Nova Análise' para iniciar o cálculo automatizado.</span>
+        </div>
+        <button class="hint-close" id="btnCloseHint" aria-label="Fechar Dica">×</button>
+      </div>
+
+      <!-- VIEW CONTAINER -->
+      <main class="content-area" id="mainContentArea">
+
+        <!-- ========================================== -->
+        <!-- SCREEN 1: LOGIN / ACESSO (Wireframe Pag 1 & 2) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-login" style="display: none;">
+          <div class="auth-container">
+            <div class="auth-card glass-panel glow-card">
+              <div class="auth-header">
+                <div class="auth-brand-badge">SAAFEM • SEGURANÇA FISCAL</div>
+                <h2>Acesse sua conta</h2>
+                <p class="auth-subtitle">Autenticação segura do analista e ciência das regras de privacidade.</p>
+              </div>
+
+              <!-- Alert Box for Validation Errors -->
+              <div class="auth-alert error-alert" id="loginAlertBox" style="display: none;" role="alert">
+                <span class="alert-icon">⚠️</span>
+                <span class="alert-text" id="loginAlertMsg"></span>
+              </div>
+
+              <form class="auth-form" id="loginForm" novalidate>
+                <div class="form-group">
+                  <label for="loginEmail">Email institucional</label>
+                  <div class="input-wrapper">
+                    <input type="email" id="loginEmail" placeholder="nome.sobrenome@email.com" autocomplete="email" required>
+                    <span class="input-focus-border"></span>
+                  </div>
+                  <span class="field-hint">Ex: analista@fazenda.gov.br ou seu e-mail cadastrado</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="loginSenha">Senha</label>
+                  <div class="input-wrapper">
+                    <input type="password" id="loginSenha" placeholder="••••••••••" autocomplete="current-password" required>
+                    <button type="button" class="btn-toggle-pass" id="btnToggleLoginPass" title="Ver senha">👁️</button>
+                    <span class="input-focus-border"></span>
+                  </div>
+                </div>
+
+                <div class="lgpd-consent-box">
+                  <span class="lgpd-shield">🛡️</span>
+                  <span class="lgpd-text">Ao entrar, você concorda com o tratamento de dados conforme a LGPD e a política institucional.</span>
+                </div>
+
+                <button type="submit" class="btn-primary btn-large btn-glow" id="btnSubmitLogin">
+                  <span class="btn-text">ENTRAR NO SAAFEM</span>
+                  <span class="btn-sparkle">➜</span>
+                </button>
+
+                <div class="auth-divider"><span>ou</span></div>
+
+                <button type="button" class="btn-secondary" id="btnGoToSignup">
+                  Crie uma nova conta
+                </button>
+
+                <!-- Demo Fast Access (for testing) -->
+                <div class="demo-login-box">
+                  <button type="button" class="btn-link" id="btnQuickDemoLogin">
+                    ⚡ Acesso Rápido de Teste (Preencher Analista Demo)
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 2: CRIAR CONTA (Wireframe Pag 3 & 4) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-signup" style="display: none;">
+          <div class="auth-container">
+            <div class="auth-card glass-panel glow-card">
+              <div class="auth-header">
+                <div class="auth-brand-badge">NOVO REGISTRO</div>
+                <h2>Crie sua conta</h2>
+                <p class="auth-subtitle">Espaço para registrar o e-mail do usuário para acesso futuro da conta.</p>
+              </div>
+
+              <!-- Alert Box for Signup Errors -->
+              <div class="auth-alert error-alert" id="signupAlertBox" style="display: none;" role="alert">
+                <span class="alert-icon">⚠️</span>
+                <span class="alert-text" id="signupAlertMsg"></span>
+              </div>
+
+              <form class="auth-form" id="signupForm" novalidate>
+                <div class="form-group">
+                  <label for="signupEmail">Usuário (email)</label>
+                  <div class="input-wrapper">
+                    <input type="email" id="signupEmail" placeholder="nome.sobrenome@email.com" required>
+                    <span class="input-focus-border"></span>
+                  </div>
+                  <span class="field-hint">O e-mail à ser inserido deve existir previamente.</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="signupSenha">Senha da conta</label>
+                  <div class="input-wrapper">
+                    <input type="password" id="signupSenha" placeholder="••••••••••" required>
+                    <span class="input-focus-border"></span>
+                  </div>
+                  <span class="field-hint">A senha pode incluir letras maiúsculas e minúsculas, números e símbolos.</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="signupRepitaSenha">Repita a senha</label>
+                  <div class="input-wrapper">
+                    <input type="password" id="signupRepitaSenha" placeholder="••••••••••" required>
+                    <span class="input-focus-border"></span>
+                  </div>
+                  <span class="field-hint">Deve ser a mesma senha para validação de intenção.</span>
+                </div>
+
+                <div class="lgpd-consent-box">
+                  <span class="lgpd-shield">🛡️</span>
+                  <span class="lgpd-text">Ao entrar, você concorda com o tratamento de dados conforme a LGPD e a política institucional.</span>
+                </div>
+
+                <button type="submit" class="btn-primary btn-large btn-glow" id="btnSubmitSignup">
+                  <span class="btn-text">CRIAR CONTA</span>
+                  <span class="btn-sparkle">➜</span>
+                </button>
+
+                <div class="auth-divider"><span>ou</span></div>
+
+                <button type="button" class="btn-secondary" id="btnGoToLogin">
+                  Faça o login
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 3: VISÃO GERAL / DASHBOARD (Pag 5 & 6) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-dashboard">
+          <div class="page-header">
+            <div class="header-titles">
+              <span class="screen-crumb">VISÃO GERAL</span>
+              <h1>Visão geral</h1>
+              <p class="header-desc">Resumo operacional dos municípios, coletas e alertas prioritários para o panorama do analista.</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn-primary btn-glow" id="btnStartNewAnalysis">
+                <span class="btn-icon">⚡</span>
+                <span class="btn-text">NOVA ANÁLISE</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Main KPI Cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card glass-panel" id="cardMunicipios">
+              <div class="kpi-top">
+                <span class="kpi-label">MUNICÍPIOS MONITORADOS</span>
+                <span class="kpi-badge-icon">🏛️</span>
+              </div>
+              <div class="kpi-number counter-anim" data-val="399" id="kpiMunicipios">399</div>
+              <div class="kpi-sub">municípios atendidos no Paraná</div>
+              <div class="kpi-bar-progress"><div style="width: 100%;"></div></div>
+            </div>
+
+            <div class="kpi-card glass-panel status-success-border" id="cardColetas">
+              <div class="kpi-top">
+                <span class="kpi-label">COLETAS COM SUCESSO</span>
+                <span class="kpi-badge-icon">✅</span>
+              </div>
+              <div class="kpi-number counter-anim text-success" data-val="368" id="kpiColetas">368</div>
+              <div class="kpi-sub">coletas atualizadas e integradas</div>
+              <div class="kpi-bar-progress"><div style="width: 92.2%; background: var(--success);"></div></div>
+            </div>
+
+            <div class="kpi-card glass-panel status-warn-border" id="cardPendencias">
+              <div class="kpi-top">
+                <span class="kpi-label">PENDÊNCIAS</span>
+                <span class="kpi-badge-icon">⏳</span>
+              </div>
+              <div class="kpi-number counter-anim text-warning" data-val="24" id="kpiPendencias">24</div>
+              <div class="kpi-sub">aguardam verificação ou conclusão</div>
+              <div class="kpi-bar-progress"><div style="width: 6.0%; background: var(--warning);"></div></div>
+            </div>
+
+            <div class="kpi-card glass-panel status-danger-border" id="cardErros">
+              <div class="kpi-top">
+                <span class="kpi-label">ERROS CRÍTICOS</span>
+                <span class="kpi-badge-icon">🚨</span>
+              </div>
+              <div class="kpi-number counter-anim text-danger" data-val="7" id="kpiErros">7</div>
+              <div class="kpi-sub">precisam de verificação com urgência</div>
+              <div class="kpi-bar-progress"><div style="width: 1.8%; background: var(--danger);"></div></div>
+            </div>
+          </div>
+
+          <!-- Mid Section: Interactive Chart + Recent Alerts -->
+          <div class="dashboard-mid-grid">
+            <!-- Coletas Chart Card -->
+            <div class="chart-card glass-panel">
+              <div class="chart-header">
+                <div>
+                  <h3 class="chart-title">Últimas coletas da semana</h3>
+                  <p class="chart-sub">Comparativo entre requisições enviadas e coletas válidas homologadas</p>
+                </div>
+                <div class="chart-legend">
+                  <span class="legend-item"><span class="legend-dot dot-coletas"></span> Coletas</span>
+                  <span class="legend-item"><span class="legend-dot dot-validas"></span> Válidas</span>
+                </div>
+              </div>
+
+              <div class="chart-canvas-container" id="chartColetasWrapper">
+                <svg viewBox="0 0 540 220" class="svg-line-chart" id="svgColetasChart">
+                  <!-- Grid horizontal lines -->
+                  <line x1="40" y1="20" x2="520" y2="20" class="grid-line" />
+                  <line x1="40" y1="60" x2="520" y2="60" class="grid-line" />
+                  <line x1="40" y1="100" x2="520" y2="100" class="grid-line" />
+                  <line x1="40" y1="140" x2="520" y2="140" class="grid-line" />
+                  <line x1="40" y1="180" x2="520" y2="180" class="grid-line" />
+
+                  <!-- Y-Axis Labels -->
+                  <text x="30" y="24" class="axis-label">100</text>
+                  <text x="30" y="64" class="axis-label">80</text>
+                  <text x="30" y="104" class="axis-label">60</text>
+                  <text x="30" y="144" class="axis-label">40</text>
+                  <text x="30" y="184" class="axis-label">20</text>
+
+                  <!-- Chart Data Curves (Seg: 42/38, Ter: 58/52, Qua: 51/48, Qui: 70/64, Sex: 88/80) -->
+                  <!-- Coletas Line (Blue) -->
+                  <path d="M 60 142 L 170 112 L 280 126 L 390 85 L 500 48" class="chart-line line-coletas" id="pathColetas"/>
+                  <!-- Válidas Line (Cyan/Green) -->
+                  <path d="M 60 150 L 170 124 L 280 132 L 390 98 L 500 62" class="chart-line line-validas" id="pathValidas"/>
+
+                  <!-- Interactive Data Points -->
+                  <circle cx="60" cy="142" r="4.5" class="data-point point-coletas" data-tip="Segunda: 42 coletas"/>
+                  <circle cx="170" cy="112" r="4.5" class="data-point point-coletas" data-tip="Terça: 58 coletas"/>
+                  <circle cx="280" cy="126" r="4.5" class="data-point point-coletas" data-tip="Quarta: 51 coletas"/>
+                  <circle cx="390" cy="85" r="4.5" class="data-point point-coletas" data-tip="Quinta: 70 coletas"/>
+                  <circle cx="500" cy="48" r="4.5" class="data-point point-coletas" data-tip="Sexta: 88 coletas"/>
+
+                  <circle cx="60" cy="150" r="4.5" class="data-point point-validas" data-tip="Segunda: 38 válidas"/>
+                  <circle cx="170" cy="124" r="4.5" class="data-point point-validas" data-tip="Terça: 52 válidas"/>
+                  <circle cx="280" cy="132" r="4.5" class="data-point point-validas" data-tip="Quarta: 48 válidas"/>
+                  <circle cx="390" cy="98" r="4.5" class="data-point point-validas" data-tip="Quinta: 64 válidas"/>
+                  <circle cx="500" cy="62" r="4.5" class="data-point point-validas" data-tip="Sexta: 80 válidas"/>
+
+                  <!-- X-Axis Labels -->
+                  <text x="60" y="208" class="axis-label x-label">Seg</text>
+                  <text x="170" y="208" class="axis-label x-label">Ter</text>
+                  <text x="280" y="208" class="axis-label x-label">Qua</text>
+                  <text x="390" y="208" class="axis-label x-label">Qui</text>
+                  <text x="500" y="208" class="axis-label x-label">Sex</text>
+                </svg>
+                <div class="chart-tooltip" id="chartTooltip"></div>
+              </div>
+            </div>
+
+            <!-- Recent Alerts List -->
+            <div class="alerts-card glass-panel">
+              <div class="alerts-header">
+                <h3 class="chart-title">Alertas recentes</h3>
+                <span class="live-pulse-badge">Ao Vivo</span>
+              </div>
+              <div class="alerts-list" id="alertsList">
+                <div class="alert-item alert-danger" data-city="Londrina">
+                  <div class="alert-dot"></div>
+                  <div class="alert-info">
+                    <strong class="alert-title">Portal indisponível</strong>
+                    <span class="alert-meta">Londrina • Falha timeout no portal municipal</span>
+                  </div>
+                  <button class="btn-alert-action" onclick="app.selectCityAndGo('Londrina', 4113700)">Tratar</button>
+                </div>
+
+                <div class="alert-item alert-warning" data-city="Maringá">
+                  <div class="alert-dot"></div>
+                  <div class="alert-info">
+                    <strong class="alert-title">PDF requer conferência</strong>
+                    <span class="alert-meta">Maringá • Divergência de R$ 450k em deduções</span>
+                  </div>
+                  <button class="btn-alert-action" onclick="app.selectCityAndGo('Maringá', 4115200)">Auditar</button>
+                </div>
+
+                <div class="alert-item alert-success" data-city="Cascavel">
+                  <div class="alert-dot"></div>
+                  <div class="alert-info">
+                    <strong class="alert-title">Coleta concluída</strong>
+                    <span class="alert-meta">Cascavel • 100% dos dados fiscais validados</span>
+                  </div>
+                  <button class="btn-alert-action" onclick="app.selectCityAndGo('Cascavel', 4104808)">Ver</button>
+                </div>
+
+                <div class="alert-item alert-info" data-city="Curitiba">
+                  <div class="alert-dot"></div>
+                  <div class="alert-info">
+                    <strong class="alert-title">Cenário de piso salvo</strong>
+                    <span class="alert-meta">Curitiba • Impacto de 6,27% sob análise</span>
+                  </div>
+                  <button class="btn-alert-action" onclick="app.selectCityAndGo('Curitiba', 4106902)">Revisar</button>
+                </div>
+              </div>
+
+              <!-- Quick Next Step Footer -->
+              <div class="flow-footer-card">
+                <div class="flow-hint">Pronto para iniciar? Escolha o município para análise.</div>
+                <button class="btn-primary" onclick="app.navigateTo('view-municipios')">
+                  Ir para Seleção de Município ➜
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 4: SELEÇÃO DE MUNICÍPIO (Pag 7 & 8) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-municipios" style="display: none;">
+          <div class="page-header">
+            <div class="header-titles">
+              <span class="screen-crumb">MUNICÍPIOS</span>
+              <h1>Seleção de município</h1>
+              <p class="header-desc">Busca e filtros definem o recorte da análise antes da coleta.</p>
+            </div>
+          </div>
+
+          <!-- Filter Search Box -->
+          <div class="filter-box glass-panel glow-card">
+            <div class="filter-form-grid">
+              <div class="filter-col flex-2">
+                <label for="inputBuscaMunicipio">Buscar município</label>
+                <div class="search-input-wrapper">
+                  <span class="search-icon">🔍</span>
+                  <input type="text" id="inputBuscaMunicipio" placeholder="Digite nome ou código IBGE (ex: Curitiba ou 4106902)" autocomplete="off">
+                  <div class="search-autocomplete-list" id="searchAutocompleteList"></div>
+                </div>
+                <span class="field-sub">Espaço para inserir o nome ou código IBGE do município de interesse</span>
+              </div>
+
+              <div class="filter-col">
+                <label for="selectExercicio">Exercício</label>
+                <div class="custom-select-wrapper">
+                  <select id="selectExercicio">
+                    <option value="2024" selected>2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                  </select>
+                </div>
+                <span class="field-sub">Espaço para selecionar o ano de interesse fiscal</span>
+              </div>
+
+              <div class="filter-col">
+                <label for="selectPeriodo">Período</label>
+                <div class="custom-select-wrapper">
+                  <select id="selectPeriodo">
+                    <option value="Anual" selected>Anual</option>
+                    <option value="1º Semestre">1º Semestre</option>
+                    <option value="2º Semestre">2º Semestre</option>
+                  </select>
+                </div>
+                <span class="field-sub">Diverge entre período anual ou semestral</span>
+              </div>
+
+              <div class="filter-col btn-col">
+                <button class="btn-primary btn-large btn-glow" id="btnAplicarFiltro">
+                  <span class="btn-icon">⚡</span>
+                  <span class="btn-text">APLICAR</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Municipalities Table -->
+          <div class="table-card glass-panel">
+            <div class="table-header">
+              <div>
+                <h3 class="table-title">Municípios recentes do Paraná</h3>
+                <p class="table-sub">Selecione diretamente um dos municípios auditados recentemente para carregar seus dados fiscais</p>
+              </div>
+              <span class="badge-total">4 registros em destaque</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="modern-table" id="tableMunicipiosRecentes">
+                <thead>
+                  <tr>
+                    <th>MUNICÍPIO</th>
+                    <th>CÓDIGO IBGE</th>
+                    <th>EXERCÍCIO</th>
+                    <th>STATUS OPERACIONAL</th>
+                    <th style="text-align: right;">AÇÃO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-row-active" data-city="Curitiba" data-ibge="4106902">
+                    <td>
+                      <div class="city-name-cell">
+                        <span class="city-pin">🏙️</span>
+                        <strong>Curitiba</strong>
+                        <span class="tag-badge">Capital</span>
+                      </div>
+                    </td>
+                    <td><code>4106902</code></td>
+                    <td>2024 (Anual)</td>
+                    <td><span class="status-pill status-pill-success">Atualizado</span></td>
+                    <td style="text-align: right;">
+                      <button class="btn-table-action" onclick="app.selectCityAndGo('Curitiba', 4106902)">Selecionar & Coletar ➜</button>
+                    </td>
+                  </tr>
+
+                  <tr data-city="Londrina" data-ibge="4113700">
+                    <td>
+                      <div class="city-name-cell">
+                        <span class="city-pin">🏛️</span>
+                        <strong>Londrina</strong>
+                      </div>
+                    </td>
+                    <td><code>4113700</code></td>
+                    <td>2024 (Anual)</td>
+                    <td><span class="status-pill status-pill-warning">Pendente</span></td>
+                    <td style="text-align: right;">
+                      <button class="btn-table-action" onclick="app.selectCityAndGo('Londrina', 4113700)">Selecionar & Coletar ➜</button>
+                    </td>
+                  </tr>
+
+                  <tr data-city="Maringá" data-ibge="4115200">
+                    <td>
+                      <div class="city-name-cell">
+                        <span class="city-pin">🏛️</span>
+                        <strong>Maringá</strong>
+                      </div>
+                    </td>
+                    <td><code>4115200</code></td>
+                    <td>2024 (Anual)</td>
+                    <td><span class="status-pill status-pill-success">Atualizado</span></td>
+                    <td style="text-align: right;">
+                      <button class="btn-table-action" onclick="app.selectCityAndGo('Maringá', 4115200)">Selecionar & Coletar ➜</button>
+                    </td>
+                  </tr>
+
+                  <tr data-city="Cascavel" data-ibge="4104808">
+                    <td>
+                      <div class="city-name-cell">
+                        <span class="city-pin">🏛️</span>
+                        <strong>Cascavel</strong>
+                      </div>
+                    </td>
+                    <td><code>4104808</code></td>
+                    <td>2024 (Anual)</td>
+                    <td><span class="status-pill status-pill-danger">Revisar</span></td>
+                    <td style="text-align: right;">
+                      <button class="btn-table-action" onclick="app.selectCityAndGo('Cascavel', 4104808)">Selecionar & Coletar ➜</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Primata-friendly Stepper Navigation -->
+            <div class="flow-footer-nav">
+              <button class="btn-secondary" onclick="app.navigateTo('view-dashboard')">⬅ Voltar ao Dashboard</button>
+              <button class="btn-primary btn-glow" onclick="app.navigateTo('view-coleta')">
+                Avançar para Coleta & Importação ➜
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 5: COLETA E IMPORTAÇÃO DE DADOS (Pag 9 & 10) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-coleta" style="display: none;">
+          <div class="page-header">
+            <div class="header-titles">
+              <span class="screen-crumb">COLETA DE DADOS</span>
+              <h1>Coleta e importação de dados</h1>
+              <p class="header-desc">Área responsável por integrar portais oficiais, arquivos locais e cache operacional para a importação das informações fiscais.</p>
+            </div>
+            <div class="header-active-city">
+              <span class="header-city-badge" id="coletaCityBadge">Município: Curitiba • PR</span>
+            </div>
+          </div>
+
+          <!-- 3 Official Source Status Connectors -->
+          <div class="sources-grid">
+            <div class="source-card glass-panel" id="srcSiconfi">
+              <div class="source-header">
+                <span class="source-logo">🏛️</span>
+                <span class="source-status-badge badge-active">Ativo</span>
+              </div>
+              <h3 class="source-title">SICONFI</h3>
+              <p class="source-status-desc">Sistema de Informações Contábeis e Fiscais</p>
+              <div class="source-latency">Status: <strong class="text-success">Disponível</strong> • Latência 48ms</div>
+            </div>
+
+            <div class="source-card glass-panel" id="srcTransparencia">
+              <div class="source-header">
+                <span class="source-logo">🌐</span>
+                <span class="source-status-badge badge-connected">Sincronizado</span>
+              </div>
+              <h3 class="source-title">Portal da Transparência</h3>
+              <p class="source-status-desc">Dados orçamentários abertos do Executivo</p>
+              <div class="source-latency">Status: <strong class="text-primary">Conectado • 2 min</strong></div>
+            </div>
+
+            <div class="source-card glass-panel" id="srcTce">
+              <div class="source-header">
+                <span class="source-logo">⚖️</span>
+                <span class="source-status-badge badge-active">Ativo</span>
+              </div>
+              <h3 class="source-title">Tribunais de Contas</h3>
+              <p class="source-status-desc">TCE-PR (Relatórios RREO e RGF oficiais)</p>
+              <div class="source-latency">Status: <strong class="text-success">Disponível</strong> • Assinatura ICP</div>
+            </div>
+          </div>
+
+          <!-- Action Buttons Bar -->
+          <div class="coleta-actions-card glass-panel">
+            <div class="coleta-buttons-flex">
+              <button class="btn-coleta-primary btn-glow" id="btnColetarPortais">
+                <span class="btn-coleta-icon">⚡</span>
+                <div class="btn-coleta-text">
+                  <strong>COLETAR DOS PORTAIS</strong>
+                  <span>Dispara a busca automatizada nas fontes oficiais com web scraping</span>
+                </div>
+              </button>
+
+              <button class="btn-coleta-secondary" id="btnImportarPdfTce">
+                <span class="btn-coleta-icon">📄</span>
+                <div class="btn-coleta-text">
+                  <strong>IMPORTAR PDF DO TCE</strong>
+                  <span>Carrega e faz OCR/parsing de documentos fiscais externos</span>
+                </div>
+              </button>
+            </div>
+
+            <!-- Drag & Drop Hidden File Input for PDF -->
+            <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;">
+
+            <!-- Animated Laser Scanning & Extraction Progress Bar -->
+            <div class="progress-section" id="progressSection">
+              <div class="progress-header-info">
+                <div class="progress-title-row">
+                  <span class="progress-spinner-mini" id="progressSpinner"></span>
+                  <span class="progress-pct-text" id="progressPercentLabel">Processando documentos — 70%</span>
+                </div>
+                <span class="cache-badge" id="cacheStatusBadge">
+                  <span class="cache-icon">⚡</span> Cache ativo: dados de referência serão reutilizados quando válidos
+                </span>
+              </div>
+
+              <!-- Visual Progress Track -->
+              <div class="modern-progress-bar">
+                <div class="progress-fill-active" id="coletaProgressBar" style="width: 70%;">
+                  <span class="progress-glow-head"></span>
+                </div>
+              </div>
+
+              <!-- Step Info & Laser Scanner Terminal Preview -->
+              <div class="stage-info-row">
+                <span class="stage-tag" id="coletaStageLabel">Última etapa: normalização dos anexos fiscais</span>
+                <span class="speed-tag" id="coletaSpeedLabel">Velocidade: 1.4 MB/s • 0 erros</span>
+              </div>
+
+              <!-- Terminal Log Stream -->
+              <div class="crawler-terminal-stream" id="crawlerStream">
+                <div class="term-line success">✓ Conexão estabelecida com SICONFI [200 OK]</div>
+                <div class="term-line success">✓ Token do Portal da Transparência de Curitiba validado</div>
+                <div class="term-line info">ℹ Baixando Anexo 1 (RREO) e Anexo 8 (FUNDEB)...</div>
+                <div class="term-line highlight">⚡ Normalizando campos contábeis e ajustando casas decimais</div>
+              </div>
+            </div>
+
+            <!-- Primata-friendly Stepper Navigation -->
+            <div class="flow-footer-nav">
+              <button class="btn-secondary" onclick="app.navigateTo('view-municipios')">⬅ Voltar aos Municípios</button>
+              <button class="btn-primary btn-glow" id="btnGoToConferencia" onclick="app.navigateTo('view-conferencia')">
+                Conferir Dados Tratados ➜
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 6: CONFERÊNCIA DOS DADOS TRATADOS (Pag 11 & 12) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-conferencia" style="display: none;">
+          <div class="page-header">
+            <div class="header-titles">
+              <span class="screen-crumb">CONFERÊNCIA</span>
+              <h1>Conferência dos dados tratados</h1>
+              <p class="header-desc">Valores normalizados em reais, com rastreabilidade completa das correções aplicadas aos dados brutos coletados.</p>
+            </div>
+            <div class="header-active-city">
+              <span class="header-city-badge">Município: Curitiba • PR</span>
+            </div>
+          </div>
+
+          <!-- Comparison Table Card -->
+          <div class="table-card glass-panel glow-card">
+            <div class="table-header">
+              <div>
+                <h3 class="table-title">Auditoria e Normalização das Contas Orçamentárias</h3>
+                <p class="table-sub">Compara o Valor original extraído com o Valor normalizado e o tipo de Tratamento aplicado</p>
+              </div>
+              <span class="badge-total">5 contas essenciais verificadas</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="modern-table audit-table" id="tableConferencia">
+                <thead>
+                  <tr>
+                    <th>CONTA CONTÁBIL</th>
+                    <th>VALOR ORIGINAL</th>
+                    <th>VALOR NORMALIZADO</th>
+                    <th>TRATAMENTO APLICADO</th>
+                    <th style="text-align: right;">STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="account-cell">
+                        <strong>Receita corrente</strong>
+                        <span class="account-code">Código 1.0.0.0.00.0.0</span>
+                      </div>
+                    </td>
+                    <td><span class="val-orig">12.450.900</span></td>
+                    <td><span class="val-norm">R$ 12.450.900,00</span></td>
+                    <td><span class="tag-treatment tag-padronizado">Padronizado</span></td>
+                    <td style="text-align: right;"><span class="check-icon">✓</span></td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <div class="account-cell">
+                        <strong>FUNDEB</strong>
+                        <span class="account-code">Transferências FUNDEB recebidas</span>
+                      </div>
+                    </td>
+                    <td><span class="val-orig">3.087.220</span></td>
+                    <td><span class="val-norm">R$ 3.087.220,00</span></td>
+                    <td><span class="tag-treatment tag-validado">Validado</span></td>
+                    <td style="text-align: right;"><span class="check-icon">✓</span></td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <div class="account-cell">
+                        <strong>Transferências</strong>
+                        <span class="account-code">Outras transferências correntes</span>
+                      </div>
+                    </td>
+                    <td><span class="val-orig text-muted">—</span></td>
+                    <td><span class="val-norm">R$ 0,00</span></td>
+                    <td><span class="tag-treatment tag-ausente">Ausente → zero</span></td>
+                    <td style="text-align: right;"><span class="check-icon">✓</span></td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <div class="account-cell">
+                        <strong>Deduções</strong>
+                        <span class="account-code">Dedução de receita para FUNDEB</span>
+                      </div>
+                    </td>
+                    <td><span class="val-orig">450.120,5</span></td>
+                    <td><span class="val-norm">R$ 450.120,50</span></td>
+                    <td><span class="tag-treatment tag-corrigido">Corrigido</span></td>
+                    <td style="text-align: right;"><span class="check-icon">✓</span></td>
+                  </tr>
+
+                  <tr class="table-row-highlight">
+                    <td>
+                      <div class="account-cell">
+                        <strong>Receita líquida</strong>
+                        <span class="account-code">Base apurada líquida</span>
+                      </div>
+                    </td>
+                    <td><span class="val-orig">11.980.779,5</span></td>
+                    <td><span class="val-norm text-accent font-bold">R$ 11.980.779,50</span></td>
+                    <td><span class="tag-treatment tag-calculado">Calculado</span></td>
+                    <td style="text-align: right;"><span class="check-icon">✓</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Audit Confirmation Callout -->
+            <div class="audit-callout">
+              <div class="callout-icon">🛡️</div>
+              <div class="callout-text">
+                <strong>Integridade Garantida:</strong>
+                Todos os dados brutos foram higienizados conforme regras da STN/SICONFI e Lei de Responsabilidade Fiscal.
+              </div>
+            </div>
+
+            <!-- Approve Button & Flow Navigation -->
+            <div class="flow-footer-nav">
+              <button class="btn-secondary" onclick="app.navigateTo('view-coleta')">⬅ Voltar à Coleta</button>
+              <button class="btn-primary btn-large btn-glow" id="btnAprovarDados">
+                <span class="btn-icon">✓</span>
+                <span class="btn-text">APROVAR DADOS E PROSSEGUIR</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 7: ANÁLISE GERAL / FUNDEB (Pag 13 & 14) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-analise-geral" style="display: none;">
+          <div class="page-header">
+            <div class="header-titles">
+              <span class="screen-crumb">ANÁLISES • GERAL</span>
+              <h1>Análise geral</h1>
+              <p class="header-desc">Composição da base FUNDEB e memória de cálculo detalhada por conta contábil.</p>
+            </div>
+            <div class="header-active-city">
+              <span class="header-city-badge">Município: Curitiba • PR</span>
+            </div>
+          </div>
+
+          <!-- 3 KPI Cards -->
+          <div class="kpi-grid-3">
+            <div class="kpi-card glass-panel">
+              <span class="kpi-label">RECEITA BRUTA</span>
+              <div class="kpi-number text-accent" id="kpiReceitaBruta">R$ 18,4 mi</div>
+              <span class="kpi-sub">Total de receitas tributárias e transferências</span>
+            </div>
+
+            <div class="kpi-card glass-panel">
+              <span class="kpi-label">DEDUÇÕES LEGAIS</span>
+              <div class="kpi-number text-warning" id="kpiDeducoes">R$ 2,1 mi</div>
+              <span class="kpi-sub">Retenções para formação do fundo estadual</span>
+            </div>
+
+            <div class="kpi-card glass-panel status-success-border">
+              <span class="kpi-label">BASE FUNDEB</span>
+              <div class="kpi-number text-success" id="kpiBaseFundeb">R$ 16,3 mi</div>
+              <span class="kpi-sub">Base líquida apurada para rateio do magistério</span>
+            </div>
+          </div>
+
+          <!-- Bar Chart + Memória de Cálculo Grid -->
+          <div class="analise-grid">
+            <!-- Horizontal Bar Chart -->
+            <div class="chart-card glass-panel">
+              <div class="chart-header">
+                <div>
+                  <h3 class="chart-title">Composição de receitas vinculadas</h3>
+                  <p class="chart-sub">Valores expressos em R$ milhões por tributo e transferência</p>
+                </div>
+              </div>
+
+              <div class="horizontal-bars-container" id="fundebBarsContainer">
+                <!-- ICMS: R$ 6,8 mi -->
+                <div class="hbar-item">
+                  <div class="hbar-label-row">
+                    <span class="hbar-name">ICMS</span>
+                    <span class="hbar-val">R$ 6,8 mi</span>
+                  </div>
+                  <div class="hbar-track">
+                    <div class="hbar-fill bar-icms" style="width: 97%;"></div>
+                  </div>
+                </div>
+
+                <!-- FPM: R$ 5,2 mi -->
+                <div class="hbar-item">
+                  <div class="hbar-label-row">
+                    <span class="hbar-name">FPM</span>
+                    <span class="hbar-val">R$ 5,2 mi</span>
+                  </div>
+                  <div class="hbar-track">
+                    <div class="hbar-fill bar-fpm" style="width: 74%;"></div>
+                  </div>
+                </div>
+
+                <!-- IPVA: R$ 2,4 mi -->
+                <div class="hbar-item">
+                  <div class="hbar-label-row">
+                    <span class="hbar-name">IPVA</span>
+                    <span class="hbar-val">R$ 2,4 mi</span>
+                  </div>
+                  <div class="hbar-track">
+                    <div class="hbar-fill bar-ipva" style="width: 34%;"></div>
+                  </div>
+                </div>
+
+                <!-- ITR: R$ 0,8 mi -->
+                <div class="hbar-item">
+                  <div class="hbar-label-row">
+                    <span class="hbar-name">ITR</span>
+                    <span class="hbar-val">R$ 0,8 mi</span>
+                  </div>
+                  <div class="hbar-track">
+                    <div class="hbar-fill bar-itr" style="width: 11%;"></div>
+                  </div>
+                </div>
+
+                <!-- Outras: R$ 1,2 mi -->
+                <div class="hbar-item">
+                  <div class="hbar-label-row">
+                    <span class="hbar-name">Outras</span>
+                    <span class="hbar-val">R$ 1,2 mi</span>
+                  </div>
+                  <div class="hbar-track">
+                    <div class="hbar-fill bar-outras" style="width: 17%;"></div>
+                  </div>
+                </div>
+
+                <div class="hbar-axis-labels">
+                  <span>R$ 0 mi</span>
+                  <span>R$ 1 mi</span>
+                  <span>R$ 2 mi</span>
+                  <span>R$ 3 mi</span>
+                  <span>R$ 4 mi</span>
+                  <span>R$ 5 mi</span>
+                  <span>R$ 6 mi</span>
+                  <span>R$ 7 mi</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Memória de Cálculo Card -->
+            <div class="memoria-card glass-panel">
+              <div class="memoria-header">
+                <span class="memoria-icon">🧮</span>
+                <h3 class="chart-title">Memória de cálculo</h3>
+              </div>
+              <p class="memoria-sub">Fórmula paramétrica auditada pela metodologia Paloware:</p>
+
+              <div class="memoria-formula-box">
+                <div class="formula-line positive">
+                  <span class="formula-op">+</span>
+                  <span class="formula-desc">Receitas vinculadas</span>
+                  <span class="formula-val" id="memoriaRecVinculadas">R$ 18.400.000,00</span>
+                </div>
+                <div class="formula-line negative">
+                  <span class="formula-op">−</span>
+                  <span class="formula-desc">Deduções legais</span>
+                  <span class="formula-val" id="memoriaDeducoes">R$ 2.100.000,00</span>
+                </div>
+                <div class="formula-line neutral">
+                  <span class="formula-op">+</span>
+                  <span class="formula-desc">Transferências elegíveis</span>
+                  <span class="formula-val">R$ 0,00</span>
+                </div>
+                <div class="formula-divider"></div>
+                <div class="formula-line total">
+                  <span class="formula-op">=</span>
+                  <span class="formula-desc"><strong>Base FUNDEB</strong></span>
+                  <span class="formula-val text-success font-bold" id="memoriaBaseFundeb">R$ 16.300.000,00</span>
+                </div>
+              </div>
+
+              <div class="memoria-note">
+                <strong>Base Legal:</strong>
+                Art. 212-A da CF/88 e Lei nº 14.113/2020 (Novo FUNDEB permanente).
+              </div>
+            </div>
+          </div>
+
+          <!-- Primata-friendly Stepper Navigation -->
+          <div class="flow-footer-nav">
+            <button class="btn-secondary" onclick="app.navigateTo('view-conferencia')">⬅ Voltar à Conferência</button>
+            <button class="btn-primary btn-glow" onclick="app.navigateTo('view-analise-financeira')">
+              Avançar para Análise Financeira (LRF) ➜
+            </button>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 8: ANÁLISE FINANCEIRA (Pag 15 & 16) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-analise-financeira" style="display: none;">
+          <div class="page-header">
+            <div class="header-titles">
+              <span class="screen-crumb">ANÁLISES • FINANCEIRA</span>
+              <h1>Análise financeira</h1>
+              <p class="header-desc">Compara pessoal do Magistério, limites da LRF e impacto do Piso Salarial.</p>
+            </div>
+            <div class="header-active-city">
+              <span class="header-city-badge">Município: Curitiba • PR</span>
+            </div>
+          </div>
+
+          <div class="financeira-main-grid">
+            <!-- Temporal Trend Chart -->
+            <div class="chart-card glass-panel">
+              <div class="chart-header">
+                <div>
+                  <h3 class="chart-title">Despesa com pessoal / RCL (Histórico & Projeção)</h3>
+                  <p class="chart-sub">Evolução do percentual comprometido frente aos limites legais da LRF</p>
+                </div>
+                <div class="chart-legend">
+                  <span class="legend-item"><span class="legend-dot dot-magisterio"></span> Pessoal Magistério</span>
+                  <span class="legend-item"><span class="legend-dot dot-alerta"></span> Limite de alerta (48,6%)</span>
+                  <span class="legend-item"><span class="legend-dot dot-maximo"></span> Limite máximo (54%)</span>
+                </div>
+              </div>
+
+              <div class="chart-canvas-container" id="chartFinanceiroWrapper">
+                <svg viewBox="0 0 540 240" class="svg-line-chart" id="svgFinanceiroChart">
+                  <!-- Grid horizontal lines -->
+                  <line x1="45" y1="20" x2="520" y2="20" class="grid-line" />
+                  <line x1="45" y1="55" x2="520" y2="55" class="grid-line" />
+                  <line x1="45" y1="90" x2="520" y2="90" class="grid-line" />
+                  <line x1="45" y1="125" x2="520" y2="125" class="grid-line" />
+                  <line x1="45" y1="160" x2="520" y2="160" class="grid-line" />
+                  <line x1="45" y1="195" x2="520" y2="195" class="grid-line" />
+
+                  <!-- Y-Axis Labels -->
+                  <text x="35" y="24" class="axis-label">60%</text>
+                  <text x="35" y="59" class="axis-label">50%</text>
+                  <text x="35" y="94" class="axis-label">40%</text>
+                  <text x="35" y="129" class="axis-label">30%</text>
+                  <text x="35" y="164" class="axis-label">20%</text>
+                  <text x="35" y="199" class="axis-label">10%</text>
+
+                  <!-- Limite Máximo da LRF 54% (Linha Vermelha Fixa) -->
+                  <line x1="60" y1="41" x2="500" y2="41" class="ref-line line-limite-maximo" stroke="var(--danger)" stroke-width="2.5" />
+                  <text x="495" y="35" fill="var(--danger)" font-size="10" font-weight="700" text-anchor="end">54,0% Limite Máximo</text>
+
+                  <!-- Limite de Alerta da LRF 48,6% (Linha Laranja/Amarela) -->
+                  <line x1="60" y1="60" x2="500" y2="60" class="ref-line line-limite-alerta" stroke="var(--warning)" stroke-width="2.5" />
+                  <text x="495" y="74" fill="var(--warning)" font-size="10" font-weight="700" text-anchor="end">48,6% Limite de Alerta</text>
+
+                  <!-- Curva Pessoal Magistério: 2021: 43%, 2022: 46%, 2023: 48%, 2024: 50.2%, Projeção: 53.0% -->
+                  <path d="M 60 79 L 170 69 L 280 62 L 390 54 L 500 44" class="chart-line line-magisterio" id="pathMagisterio" />
+
+                  <!-- Pontos da Curva -->
+                  <circle cx="60" cy="79" r="4.5" class="data-point point-magisterio" data-tip="2021: 43.0% da RCL"/>
+                  <circle cx="170" cy="69" r="4.5" class="data-point point-magisterio" data-tip="2022: 46.0% da RCL"/>
+                  <circle cx="280" cy="62" r="4.5" class="data-point point-magisterio" data-tip="2023: 48.0% da RCL"/>
+                  <circle cx="390" cy="54" r="5" class="data-point point-magisterio current-point" data-tip="2024 (Atual): 50.2% da RCL"/>
+                  <circle cx="500" cy="44" r="5" class="data-point point-projecao" data-tip="Projeção: 53.0% da RCL"/>
+
+                  <!-- X-Axis Labels -->
+                  <text x="60" y="222" class="axis-label x-label">2021</text>
+                  <text x="170" y="222" class="axis-label x-label">2022</text>
+                  <text x="280" y="222" class="axis-label x-label">2023</text>
+                  <text x="390" y="222" class="axis-label x-label">2024</text>
+                  <text x="500" y="222" class="axis-label x-label proj-text">Projeção</text>
+                </svg>
+              </div>
+            </div>
+
+            <!-- 3 Side Impact Cards (Wireframe Pag 15) -->
+            <div class="financeira-kpi-col">
+              <div class="kpi-card glass-panel status-warn-border">
+                <span class="kpi-label">SITUAÇÃO ATUAL</span>
+                <div class="kpi-number text-warning" id="finSituacaoAtual">50,2%</div>
+                <span class="kpi-sub">Comprometimento da RCL no exercício vigente</span>
+                <div class="kpi-tag-sub">Ultrapassou Limite de Alerta (48,6%)</div>
+              </div>
+
+              <div class="kpi-card glass-panel status-danger-border">
+                <span class="kpi-label">APÓS REAJUSTE</span>
+                <div class="kpi-number text-danger" id="finAposReajuste">53,0%</div>
+                <span class="kpi-sub">Projeção estimada com aplicação do reajuste</span>
+                <div class="kpi-tag-sub">Risco de atingir Limite Máximo (54%)</div>
+              </div>
+
+              <div class="kpi-card glass-panel">
+                <span class="kpi-label">IMPACTO ANUAL</span>
+                <div class="kpi-number text-accent" id="finImpactoAnual">R$ 8,7 mi</div>
+                <span class="kpi-sub">Acréscimo financeiro estimado na folha docente</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Primata-friendly Stepper Navigation -->
+          <div class="flow-footer-nav">
+            <button class="btn-secondary" onclick="app.navigateTo('view-analise-geral')">⬅ Voltar à Análise Geral</button>
+            <button class="btn-primary btn-glow" onclick="app.navigateTo('view-indicadores')">
+              Ver Semáforo Fiscal & Indicadores ➜
+            </button>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 9: INDICADOR POR COR / SEMÁFORO (Pag 17 & 18) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-indicadores" style="display: none;">
+          <div class="page-header">
+            <div class="header-titles">
+              <span class="screen-crumb">INDICADORES</span>
+              <h1>Indicador por cor</h1>
+              <p class="header-desc">Leitura imediata da situação fiscal do município em relação aos limites legais da Lei de Responsabilidade Fiscal.</p>
+            </div>
+            <div class="header-active-city">
+              <span class="header-city-badge">Município: Curitiba • PR</span>
+            </div>
+          </div>
+
+          <!-- 3 Dynamic Traffic Light Cards -->
+          <div class="semaforo-grid">
+            <!-- 1. REGULAR -->
+            <div class="semaforo-card glass-panel" id="cardRegular">
+              <div class="semaforo-orb-wrap">
+                <div class="traffic-orb orb-green">
+                  <div class="orb-inner-light"></div>
+                  <div class="orb-wave"></div>
+                </div>
+              </div>
+              <h3 class="semaforo-title text-success">REGULAR</h3>
+              <div class="semaforo-range">Até 45%</div>
+              <div class="semaforo-desc">Margem fiscal confortável</div>
+              <div class="semaforo-badge-status" id="badgeStatusRegular">Normal</div>
+            </div>
+
+            <!-- 2. ATENÇÃO -->
+            <div class="semaforo-card glass-panel card-highlighted-warn" id="cardAtencao">
+              <div class="semaforo-orb-wrap">
+                <div class="traffic-orb orb-yellow pulsing-active">
+                  <div class="orb-inner-light"></div>
+                  <div class="orb-wave"></div>
+                </div>
+              </div>
+              <h3 class="semaforo-title text-warning">ATENÇÃO</h3>
+              <div class="semaforo-range">45% a 51,3%</div>
+              <div class="semaforo-desc">Acompanhar projeções</div>
+              <div class="semaforo-badge-status status-active-now">ATIVO AGORA</div>
+            </div>
+
+            <!-- 3. CRÍTICO -->
+            <div class="semaforo-card glass-panel" id="cardCritico">
+              <div class="semaforo-orb-wrap">
+                <div class="traffic-orb orb-red">
+                  <div class="orb-inner-light"></div>
+                  <div class="orb-wave"></div>
+                </div>
+              </div>
+              <h3 class="semaforo-title text-danger">CRÍTICO</h3>
+              <div class="semaforo-range">Acima de 51,3%</div>
+              <div class="semaforo-desc">Plano de adequação</div>
+              <div class="semaforo-badge-status" id="badgeStatusCritico">Risco Legal</div>
+            </div>
+          </div>
+
+          <!-- Active Diagnosis Banner (Wireframe Pag 17) -->
+          <div class="semaforo-diagnosis-banner" id="semaforoDiagnosisBanner">
+            <span class="diagnosis-icon">⚠️</span>
+            <div class="diagnosis-content">
+              <strong id="diagnosisCityText">Curitiba está em ATENÇÃO: 50,2% da RCL comprometida.</strong>
+              <p id="diagnosisSubText">Recomenda-se monitoramento mensal e cautela na aplicação do reajuste salarial para evitar enquadramento no limite prudencial.</p>
+            </div>
+            <button class="btn-primary" onclick="app.navigateTo('view-simulador')">
+              Testar no Simulador de Reajuste ➜
+            </button>
+          </div>
+
+          <!-- Primata-friendly Stepper Navigation -->
+          <div class="flow-footer-nav">
+            <button class="btn-secondary" onclick="app.navigateTo('view-analise-financeira')">⬅ Voltar à Análise Financeira</button>
+            <button class="btn-primary btn-glow" onclick="app.navigateTo('view-simulador')">
+              Avançar para o Simulador de Piso ➜
+            </button>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 10: SIMULADOR DE IMPACTO DO PISO (Pag 19 & 20) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-simulador" style="display: none;">
+          <div class="page-header">
+            <div class="header-titles">
+              <span class="screen-crumb">SIMULADOR</span>
+              <h1>Simulador de impacto do Piso</h1>
+              <p class="header-desc">Ferramenta interativa para testar cenários de reajuste salarial e avaliar o efeito imediato nos limites legais.</p>
+            </div>
+            <div class="header-active-city">
+              <span class="header-city-badge">Município: Curitiba • PR</span>
+            </div>
+          </div>
+
+          <!-- Interactive Simulator Workspace -->
+          <div class="simulador-grid">
+            <!-- Left: Interactive Controls -->
+            <div class="simulador-control-card glass-panel glow-card">
+              <div class="sim-header">
+                <span class="sim-badge">PARÂMETRO DE ENTRADA</span>
+                <label for="rangeReajuste" class="sim-label">Reajuste salarial proposto</label>
+              </div>
+
+              <!-- Big Number Display & Editable Input -->
+              <div class="sim-value-row">
+                <div class="sim-big-num">
+                  <input type="number" step="0.01" min="0" max="25" value="6.27" id="inputNumReajuste" class="sim-num-input" aria-label="Percentual de Reajuste">
+                  <span class="sim-pct-symbol">%</span>
+                </div>
+                <div class="sim-preset-chips">
+                  <button class="chip-preset active" data-val="6.27">Piso MEC (6,27%)</button>
+                  <button class="chip-preset" data-val="3.5">IPCA (3,5%)</button>
+                  <button class="chip-preset" data-val="10.0">Meta Docente (10%)</button>
+                </div>
+              </div>
+
+              <!-- Smooth Neon Range Slider -->
+              <div class="range-slider-wrapper">
+                <input type="range" min="0" max="20" step="0.05" value="6.27" id="rangeReajuste" class="neon-slider" aria-label="Controle deslizante de reajuste">
+                <div class="slider-ticks">
+                  <span>0%</span>
+                  <span>5%</span>
+                  <span>10%</span>
+                  <span>15%</span>
+                  <span>20%</span>
+                </div>
+              </div>
+              <span class="field-sub">Arraste ou digite um percentual para simulação em tempo real</span>
+
+              <div class="sim-action-row">
+                <button class="btn-primary btn-glow" id="btnSalvarCenario">
+                  <span class="btn-icon">💾</span>
+                  <span class="btn-text">SALVAR CENÁRIO</span>
+                </button>
+                <button class="btn-secondary" id="btnResetarSimulador">
+                  Restaurar Original
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Dynamic Comparison Cards -->
+            <div class="simulador-results-card glass-panel">
+              <div class="sim-header">
+                <span class="sim-badge">COMPARATIVO DE CENÁRIOS</span>
+                <h3 class="chart-title">Efeito Imediato na RCL</h3>
+              </div>
+
+              <div class="comparativo-flex">
+                <div class="cenario-box">
+                  <span class="cenario-title">Cenário atual</span>
+                  <div class="cenario-pct text-warning" id="simCenarioAtual">50,2%</div>
+                  <span class="cenario-sub">Sem reajuste adicional</span>
+                </div>
+
+                <div class="cenario-arrow">➜</div>
+
+                <div class="cenario-box cenario-target">
+                  <span class="cenario-title">Após reajuste</span>
+                  <div class="cenario-pct text-danger counter-anim" id="simAposReajuste">53,0%</div>
+                  <span class="cenario-sub" id="simDeltaLabel">+2,8 p.p. na folha</span>
+                </div>
+              </div>
+
+              <!-- Estimated Annual Financial Impact Banner -->
+              <div class="impacto-financeiro-banner" id="impactoFinanceiroBanner">
+                <div class="impacto-label">Impacto anual estimado:</div>
+                <div class="impacto-val" id="simImpactoReais">R$ 8.700.000,00</div>
+                <div class="impacto-legal-msg" id="simMensagemLegal">
+                  O cenário ultrapassa o limite de alerta e permanece abaixo do limite máximo da LRF.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Saved Scenarios History Table -->
+          <div class="table-card glass-panel" style="margin-top: 1.5rem;">
+            <div class="table-header">
+              <h3 class="table-title">Cenários salvos para comparação</h3>
+              <span class="badge-total" id="savedScenariosCount">1 cenário salvo</span>
+            </div>
+            <div class="table-responsive">
+              <table class="modern-table" id="tableCenariosSalvos">
+                <thead>
+                  <tr>
+                    <th>NOME DO CENÁRIO</th>
+                    <th>REAJUSTE</th>
+                    <th>COMPROMETIMENTO RCL</th>
+                    <th>IMPACTO ANUAL</th>
+                    <th>ENQUADRAMENTO LRF</th>
+                    <th style="text-align: right;">AÇÃO</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyCenarios">
+                  <tr>
+                    <td><strong>Proposta Oficial Piso 2024</strong></td>
+                    <td><span class="tag-badge">6,27%</span></td>
+                    <td><strong class="text-danger">53,0%</strong></td>
+                    <td>R$ 8.700.000,00</td>
+                    <td><span class="status-pill status-pill-warning">Alerta LRF</span></td>
+                    <td style="text-align: right;">
+                      <button class="btn-table-action" onclick="app.loadScenario(6.27)">Aplicar ➜</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Primata-friendly Stepper Navigation -->
+            <div class="flow-footer-nav">
+              <button class="btn-secondary" onclick="app.navigateTo('view-indicadores')">⬅ Voltar ao Semáforo Fiscal</button>
+              <button class="btn-primary btn-glow" onclick="app.navigateTo('view-relatorios')">
+                Gerar Parecer Técnico Oficial ➜
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 11: RELATÓRIO TÉCNICO / PARECER (Pag 21 & 22) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-relatorios" style="display: none;">
+          <div class="page-header">
+            <div class="header-titles">
+              <span class="screen-crumb">RELATÓRIOS</span>
+              <h1>Geração de relatório técnico</h1>
+              <p class="header-desc">Pré-visualização do parecer técnico consolidado por município, pronta para exportação e assinatura.</p>
+            </div>
+            <div class="header-active-city">
+              <span class="header-city-badge">Município: Curitiba • PR</span>
+            </div>
+          </div>
+
+          <div class="relatorio-layout-grid">
+            <!-- Left: Document Sheet (Paper Style 3D A4) -->
+            <div class="doc-sheet-container">
+              <div class="doc-sheet" id="parecerDocSheet">
+                <!-- Sheet Header -->
+                <div class="doc-header">
+                  <div class="doc-brand">
+                    <span class="doc-logo-shield">🏛️</span>
+                    <div>
+                      <div class="doc-sys-name">SAAFEM • PARECER TÉCNICO</div>
+                      <div class="doc-sec-name">SISTEMA AUTOMATIZADO DE ANÁLISE FISCAL E ECONÔMICA MUNICIPAL</div>
+                    </div>
+                  </div>
+                  <div class="doc-audit-stamp">
+                    <span>ICP-BRASIL</span>
+                    <small>VALIDADO</small>
+                  </div>
+                </div>
+
+                <div class="doc-title-block">
+                  <h2>Análise fiscal — Curitiba / PR</h2>
+                  <div class="doc-meta-line">
+                    <span>Exercício 2024</span> • <span>Período anual</span> • <span>Data: 27/10/2026</span>
+                  </div>
+                </div>
+
+                <!-- Section: Executive Summary -->
+                <div class="doc-section">
+                  <h3 class="doc-sec-title">1. Síntese executiva</h3>
+                  <p class="doc-p" id="docSinteseText">
+                    A despesa projetada com pessoal do Magistério alcança <strong>53,0% da Receita Corrente Líquida</strong> após o reajuste simulado de 6,27%. Recomenda-se monitoramento mensal e revisão das premissas de receita para garantir o cumprimento da Lei Federal nº 11.738/2008 sem extrapolar o teto improrrogável de 54,0% imposto pela Lei de Responsabilidade Fiscal (LC nº 101/2000).
+                  </p>
+                </div>
+
+                <!-- Section: Quadro Resumo Financeiro -->
+                <div class="doc-section">
+                  <h3 class="doc-sec-title">2. Quadro Demonstrativo Fiscal (R$ milhões)</h3>
+                  <table class="doc-table">
+                    <thead>
+                      <tr>
+                        <th>INDICADOR FISCAL</th>
+                        <th>SITUAÇÃO ATUAL</th>
+                        <th>COM REAJUSTE</th>
+                        <th>LIMITE LEGAL</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Receita Corrente Líquida (RCL)</td>
+                        <td>R$ 11.980,78 mi</td>
+                        <td>R$ 11.980,78 mi</td>
+                        <td>Base 100%</td>
+                      </tr>
+                      <tr>
+                        <td>Despesa com Magistério</td>
+                        <td>R$ 6.014,35 mi (50,2%)</td>
+                        <td>R$ 6.350,00 mi (53,0%)</td>
+                        <td>Alerta: 48,6%</td>
+                      </tr>
+                      <tr>
+                        <td>Impacto Anual Estimado</td>
+                        <td>—</td>
+                        <td><strong>+ R$ 8.700.000,00</strong></td>
+                        <td>Suportável c/ ressalvas</td>
+                      </tr>
+                      <tr>
+                        <td>Base do FUNDEB Calculada</td>
+                        <td>R$ 16.300.000,00</td>
+                        <td>R$ 16.300.000,00</td>
+                        <td>Conforme CF/88 Art 212-A</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Section: Recomendações e Conclusão -->
+                <div class="doc-section">
+                  <h3 class="doc-sec-title">3. Recomendações da Consultoria Paloware</h3>
+                  <ul class="doc-list">
+                    <li>Instituir comitê de acompanhamento bimensal das receitas de transferências do FUNDEB e ICMS.</li>
+                    <li>Submeter o plano de reposição parcelado para amortizar o pico de impacto no terceiro quadrimestre.</li>
+                    <li>Manter o arquivo de memória de cálculo com rastreabilidade auditável para prestação de contas ao TCE-PR.</li>
+                  </ul>
+                </div>
+
+                <!-- Sheet Footer Pagination -->
+                <div class="doc-footer">
+                  <div class="doc-hash">Hash SHA-256: 8f9b2c...4e7a1 • Consultor Responsável: Felipe B. Braga</div>
+                  <div class="doc-page-counter" id="docPageCounter">Página 1 / 8</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Action Sidebar & Metadata Info -->
+            <div class="doc-actions-card glass-panel">
+              <div class="doc-badge-group">
+                <div class="doc-meta-item">
+                  <span class="meta-dot green"></span>
+                  <div>
+                    <strong>Documento validado</strong>
+                    <span>Conformidade com a LGPD e LRF</span>
+                  </div>
+                </div>
+                <div class="doc-meta-item">
+                  <span class="meta-dot blue"></span>
+                  <div>
+                    <strong>Dados rastreáveis</strong>
+                    <span>Fontes: SICONFI & TCE-PR</span>
+                  </div>
+                </div>
+                <div class="doc-meta-item">
+                  <span class="meta-dot purple"></span>
+                  <div>
+                    <strong>Versão 1.0</strong>
+                    <span>Estudo técnico final homologado</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="action-buttons-stack">
+                <button class="btn-primary btn-large btn-glow" id="btnExportarPdf">
+                  <span class="btn-icon">📥</span>
+                  <span class="btn-text">EXPORTAR PDF</span>
+                </button>
+
+                <button class="btn-secondary" id="btnVoltarAnalise" onclick="app.navigateTo('view-analise-geral')">
+                  <span class="btn-icon">⬅</span>
+                  <span class="btn-text">VOLTAR À ANÁLISE</span>
+                </button>
+              </div>
+
+              <!-- Page navigation in technical report -->
+              <div class="doc-pagination-ctrl">
+                <span>Visualizar Folha:</span>
+                <div class="page-pills">
+                  <button class="page-pill active" onclick="app.setDocPage(1)">1</button>
+                  <button class="page-pill" onclick="app.setDocPage(2)">2</button>
+                  <button class="page-pill" onclick="app.setDocPage(3)">3</button>
+                  <button class="page-pill" onclick="app.setDocPage(4)">4</button>
+                  <button class="page-pill" onclick="app.setDocPage(5)">5</button>
+                  <button class="page-pill" onclick="app.setDocPage(6)">6</button>
+                  <button class="page-pill" onclick="app.setDocPage(7)">7</button>
+                  <button class="page-pill" onclick="app.setDocPage(8)">8</button>
+                </div>
+              </div>
+
+              <div class="doc-flow-next">
+                <button class="btn-link" onclick="app.navigateTo('view-exportacao')">
+                  Deseja exportar a base bruta de dados em Excel/CSV? ➜
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 12: EXPORTAÇÃO DE DADOS (Pag 23 & 24) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-exportacao" style="display: none;">
+          <div class="page-header">
+            <div class="header-titles">
+              <span class="screen-crumb">EXPORTAÇÃO</span>
+              <h1>Exportação de dados</h1>
+              <p class="header-desc">Escolha formato e recorte para compartilhar dados estruturados do sistema.</p>
+            </div>
+            <div class="header-active-city">
+              <span class="header-city-badge">Município: Curitiba • PR</span>
+            </div>
+          </div>
+
+          <!-- Format Choice & Scope Selection -->
+          <div class="export-container glass-panel glow-card">
+            <!-- 1. Format Buttons -->
+            <div class="export-section">
+              <label class="section-sub-label">ESCOLHA DE FORMATO:</label>
+              <div class="format-toggle-group" id="formatToggleGroup" role="radiogroup">
+                <button type="button" class="btn-format active" data-format="CSV" role="radio" aria-checked="true">
+                  <span class="fmt-icon">📊</span>
+                  <span class="fmt-name">CSV</span>
+                  <span class="fmt-desc">Separado por vírgulas</span>
+                </button>
+
+                <button type="button" class="btn-format" data-format="EXCEL" role="radio" aria-checked="false">
+                  <span class="fmt-icon">📗</span>
+                  <span class="fmt-name">EXCEL</span>
+                  <span class="fmt-desc">Planilha estruturada .xlsx</span>
+                </button>
+
+                <button type="button" class="btn-format" data-format="JSON" role="radio" aria-checked="false">
+                  <span class="fmt-icon">{ }</span>
+                  <span class="fmt-name">JSON</span>
+                  <span class="fmt-desc">Objeto API estruturado</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 2. Recorte e Confirmação -->
+            <div class="export-section">
+              <label class="section-sub-label">RECORTE E CONFIRMAÇÃO DOS FILTROS APLICADOS:</label>
+              <div class="recorte-grid">
+                <div class="recorte-box">
+                  <span class="recorte-label">Município</span>
+                  <span class="recorte-val" id="recorteMunicipio">Curitiba / PR</span>
+                </div>
+                <div class="recorte-box">
+                  <span class="recorte-label">Exercício</span>
+                  <span class="recorte-val" id="recorteExercicio">2024</span>
+                </div>
+                <div class="recorte-box">
+                  <span class="recorte-label">Período</span>
+                  <span class="recorte-val" id="recortePeriodo">Anual</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Summary & Download Action -->
+            <div class="export-footer-row">
+              <div class="export-summary-badge">
+                <span class="sparkle-dot"></span>
+                <span id="exportSummaryLabel">1 município • 1 exercício • 48 campos</span>
+              </div>
+
+              <button class="btn-primary btn-large btn-glow" id="btnGerarArquivo">
+                <span class="btn-icon">💾</span>
+                <span class="btn-text">GERAR ARQUIVO</span>
+                <span class="btn-sparkle">➜</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 13: MONITORAMENTO & LOGS (RNF 2) -->
+        <!-- ========================================== -->
+        <section class="app-screen" id="view-monitoramento" style="display: none;">
+          <div class="page-header">
+            <div class="header-titles">
+              <span class="screen-crumb">MONITORAMENTO & LOGS</span>
+              <h1>Monitoramento do sistema</h1>
+              <p class="header-desc">Gerenciamento de erros, logs em tempo real, auditoria e telemetria dos microserviços.</p>
+            </div>
+          </div>
+
+          <div class="monitor-grid">
+            <div class="glass-panel mon-card">
+              <h3>Saúde dos Serviços (Microserviços)</h3>
+              <div class="service-health-list">
+                <div class="service-item">
+                  <span class="svc-status-bullet status-ok"></span>
+                  <span class="svc-name">FastAPI Engine (Core)</span>
+                  <span class="svc-meta">99.98% Uptime • 12ms</span>
+                </div>
+                <div class="service-item">
+                  <span class="svc-status-bullet status-ok"></span>
+                  <span class="svc-name">Motor Web Scraper (Playwright/Pandas)</span>
+                  <span class="svc-meta">Ativo • 4 threads</span>
+                </div>
+                <div class="service-item">
+                  <span class="svc-status-bullet status-ok"></span>
+                  <span class="svc-name">In-Memory Cache (Redis Layer)</span>
+                  <span class="svc-meta">94% Hit Rate • 42 MB</span>
+                </div>
+                <div class="service-item">
+                  <span class="svc-status-bullet status-warn"></span>
+                  <span class="svc-name">Conector Portal da Transparência</span>
+                  <span class="svc-meta">Oscilações esporádicas no Paraná</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-panel mon-card">
+              <h3>Live Console Log</h3>
+              <div class="terminal-log-window" id="liveTerminalLogs">
+                <div class="tlog-row">[15:58:12] [INFO] SAAFEM v2.4 inicializado com sucesso.</div>
+                <div class="tlog-row">[15:58:14] [CACHE] Snapshot do Paraná (399 municípios) carregado do cache.</div>
+                <div class="tlog-row">[15:58:18] [AUTH] Sessão do analista fiscal verificada conforme LGPD.</div>
+                <div class="tlog-row">[15:58:20] [SCRAPER] Conexão com portal SICONFI ok.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ==================== PALOWARE TEAM MODAL ==================== -->
+  <div class="modal-overlay" id="palowareModal" role="dialog" aria-modal="true" aria-labelledby="modalPaloTitle" style="display: none;">
+    <div class="modal-card glass-panel glow-card">
+      <div class="modal-header">
+        <div class="palo-modal-brand">
+          <div class="palo-logo-dove-small">🕊️</div>
+          <div>
+            <h2 id="modalPaloTitle">Paloware — Código, Criatividade e Inovação</h2>
+            <span class="modal-sub">Jornada de Aprendizagem • Solução SAAFEM</span>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btnClosePalowareModal" aria-label="Fechar">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="palo-pillars-row">
+          <div class="palo-pillar">
+            <span class="pillar-icon">🎯</span>
+            <strong>MISSÃO</strong>
+            <p>Desenvolver soluções tecnológicas inovadoras e eficientes, criando sistemas que atendam com excelência às prefeituras.</p>
+          </div>
+          <div class="palo-pillar">
+            <span class="pillar-icon">👁️</span>
+            <strong>VISÃO</strong>
+            <p>Ser reconhecidos como um grupo criativo e colaborativo que transforma a gestão pública através de software de ponta.</p>
+          </div>
+          <div class="palo-pillar">
+            <span class="pillar-icon">⭐</span>
+            <strong>VALORES</strong>
+            <p>Trabalho em equipe, Inovação, Comprometimento, Ética, Qualidade e Aprendizado contínuo.</p>
+          </div>
+        </div>
+
+        <h3 class="team-grid-title">Nossa Equipe e Funções:</h3>
+        <div class="team-cards-grid">
+          <div class="team-member-card">
+            <div class="member-badge">CEO</div>
+            <strong>Felipe Barbosa Braga</strong>
+            <span>Liderança e Estratégia</span>
+          </div>
+
+          <div class="team-member-card">
+            <div class="member-badge">Eng. Dados</div>
+            <strong>Pedro Roika Roncaglio</strong>
+            <span>Extração e ETL Fiscal</span>
+          </div>
+
+          <div class="team-member-card">
+            <div class="member-badge">Financeiro</div>
+            <strong>Gabriel Lima Dias</strong>
+            <span>Modelagem Orçamentária LRF</span>
+          </div>
+
+          <div class="team-member-card">
+            <div class="member-badge">Qualidade</div>
+            <strong>Matheus de Oliveira</strong>
+            <span>Gerente de Qualidade & Testes</span>
+          </div>
+
+          <div class="team-member-card">
+            <div class="member-badge">Eng. Software</div>
+            <strong>Gustavo Mateus</strong>
+            <span>Arquitetura FastAPI & Core</span>
+          </div>
+
+          <div class="team-member-card">
+            <div class="member-badge">Designer</div>
+            <strong>Rafael Augusto M. Hoffmann</strong>
+            <span>Design Gráfico & Interface</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span class="footer-copy">Paloware © 2026 • Sistema Automatizado de Análise Fiscal e Econômica Municipal</span>
+        <button class="btn-primary" id="btnModalCloseOk">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Script Principal -->
+  <script src="app.js"></script>
+</body>
+</html>
